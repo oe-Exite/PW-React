@@ -1,0 +1,22 @@
+.register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__input {
+        text-align: center;
+        font-size: 1.5em
+    }
+
+    &__control {
+        margin-top: 1em;
+    }
+
+    &__btn {
+        font-size: 1.5em;
+        width: 100%;
+        background-color: rgb(81, 164, 212);
+        color: #fff;
+        padding: 1em 2em;
+    }
+}

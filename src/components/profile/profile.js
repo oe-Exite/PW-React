@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { StateContext } from '../core/state/StateProvider';
+import { StateContext } from '../../core/state/state-provider';
+import styles from './profile.module.scss';
 
-export default class Main extends Component {
+export default class Profile extends Component {
     static contextType = StateContext;
 
     render() {
