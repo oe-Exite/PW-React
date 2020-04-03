@@ -1,20 +1,20 @@
 import React, { Component } from "react";
 import {
-  Route,
-  NavLink,
-  BrowserRouter
+    Route,
+    NavLink,
+    BrowserRouter
 } from "react-router-dom";
 import { userReducer } from "./core/reducers/user"
 import { StateProvider } from "./core/state/state-provider"
-import Login from "./components/login/login";
-import Register from "./components/register/register";
+import { Login } from "./components/login/login";
+import { Register } from "./components/register/register";
 import Profile from "./components/profile/profile";
 import Header from "./components/header/header";
 import styles from './app.module.scss';
 
 class App extends Component {
     initialState = {
-        user: { primary: 'green' }
+        user: null
     };
 
     render() {

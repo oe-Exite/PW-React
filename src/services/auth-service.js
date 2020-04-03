@@ -1,5 +1,6 @@
 import React from 'react';
-import { loginUser, registerUser, bearerToken } from '../core/api-service'
+import { loginUser, registerUser, bearerToken } from '../core/api-service';
+import { setUserProfile } from '../core/actions/user'
 
 const { createContext, useContext } = React;
 
@@ -23,18 +24,24 @@ export const useAuth = () => {
     return useContext(AuthContext);
 };
 
+export const logout = (routerHistory, dispatch) => {
+    localStorage.removeItem(bearerToken);
+    dispatch(setUserProfile(null));
+    routerHistory.push('/login');
+}
+
 const login = (body) => {
     return loginUser(body).then((res) => {
         console.log('login res', res);
-        localStorage[bearerToken] = res.id_token;
+        localStorage[bearerToken] = res.data.id_token;
     })
     .catch(error => console.log('error:', error));
 };
 
 const register = (body) => {
-    registerUser(body).then((res) => {
+    return registerUser(body).then((res) => {
         console.log('register res', res);
-        localStorage[bearerToken] = res.id_token;
+        localStorage[bearerToken] = res.data.id_token;
     })
     .catch(error => console.log('error:', error));
 };

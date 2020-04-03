@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
+import { AuthContext } from '../../services/auth-service';
+import { withRouter } from 'react-router-dom';
 import styles from './register.module.scss';
 
-export default class RegisterForm extends Component {
+class RegisterForm extends Component {
+
+    static contextType = AuthContext;
 
     state = {
         username: '',
@@ -48,7 +52,11 @@ export default class RegisterForm extends Component {
         console.log('Form value', this.state);
         event.preventDefault();
         if (this.isPasswordCorrect()) {
-            this.props.registerUser(this.state);
+            const {confirmPassword, ...data} = this.state;
+            this.context.register(data).then((res) => {
+                console.log('register component res', res);
+                this.props.history.push('/')
+            });
         }
     }
 
@@ -83,3 +91,5 @@ export default class RegisterForm extends Component {
         );
     }
 }
+
+export default withRouter(RegisterForm)
