@@ -14,7 +14,8 @@ import styles from './app.module.scss';
 
 class App extends Component {
     initialState = {
-        user: null
+        user: null,
+        transactions: []
     };
 
     render() {

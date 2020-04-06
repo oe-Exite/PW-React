@@ -4,21 +4,26 @@ const baseUrl = 'http://193.124.114.46:3001';
 
 export const bearerToken = 'id_token';
 
-export const loginUser = (body) => {
-    return axios.post(`${baseUrl}/sessions/create`, body);
-};
-  
-export const registerUser = (body) => {
-    return axios.post(`${baseUrl}/users`, body);
-};
+export class ApiService {
 
-export const getUserinfo = () => {
-    return axios.get(`${baseUrl}/api/protected/user-info`, authConfig());
-};
+    static loginUser = (body) =>
+        axios.post(`${baseUrl}/sessions/create`, body);
 
-export const getTransactions = () => {
-    return axios.get(`${baseUrl}/api/protected/transactions`, authConfig());
-};
+    static registerUser = (body) =>
+        axios.post(`${baseUrl}/users`, body);
+
+    static getUserinfo = () =>
+        axios.get(`${baseUrl}/api/protected/user-info`, authConfig());
+    
+    static getUserTransactions = () =>
+        axios.get(`${baseUrl}/api/protected/transactions`, authConfig());
+
+    static createTransaction = (body) =>
+        axios.post(`${baseUrl}/api/protected/transactions`, body, authConfig());
+    
+    static usersList = (body) =>
+        axios.get(`${baseUrl}/api/protected/users/list`, body, authConfig());
+}
 
 const authConfig = () => {
     const token = localStorage[bearerToken];
