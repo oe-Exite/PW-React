@@ -3,6 +3,7 @@ import { StateContext } from '../../core/state/state-provider';
 import { withRouter } from 'react-router-dom';
 import UserService from '../../services/user-service';
 import TransactionsTable from '../transactions-list/transactions-list';
+import TransactionForm from '../transaction-form/transaction-form';
 import Button from '@material-ui/core/Button';
 import styles from './profile.module.scss';
 
@@ -42,7 +43,13 @@ class Profile extends Component {
     handleTransactionSelect = (transaction) => {
         this.setState({
             selectedTransaction: transaction
-        })
+        });
+    }
+
+    newTransaction = () => {
+        this.setState({
+            selectedTransaction: {}
+        });
     }
 
     render() {
@@ -52,23 +59,24 @@ class Profile extends Component {
         } else {
             return (
                 <div className={styles.profile}>
-                    <div>
-                        <h1>Hello, {user.name}! Your balance is {user.balance}</h1>
-                        { testTransactions && testTransactions.length > 0 
-                        ?
-                            <TransactionsTable rows={testTransactions} onTransactionSelect={this.handleTransactionSelect}/>
-                        : 
-                        <div>
-                            <span>You don't have transactions yet</span>
-                            <Button variant="contained" color="primary">
+                    <div className={styles.profile__part}>
+                        <div className={styles.profile__header}>
+                            <h2>Hello, {user.name}! Your balance is {user.balance}</h2>
+                            <Button variant="contained" color="primary" onClick={this.newTransaction}>
                                 Create transaction
                             </Button>
-                        </div> }
+                        </div>
+                        { transactions && transactions.length > 0 
+                        ?
+                            <TransactionsTable rows={transactions} onTransactionSelect={this.handleTransactionSelect}/>
+                        : 
+                        
+                            <h3 className={styles.profile__notransactions}>You don't have transactions yet</h3>
+                         }
                     </div>
                     {this.state.selectedTransaction &&
-                        <div>
-                            <span>Selected {this.state.selectedTransaction.username}</span>
-                        </div>
+                        <TransactionForm className={styles.profile__part}
+                            selectedTransaction={this.state.selectedTransaction} onTransactionClose={this.handleTransactionSelect}/>
                     }
                 </div>
             );

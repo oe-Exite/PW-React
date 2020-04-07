@@ -22,7 +22,7 @@ export class ApiService {
         axios.post(`${baseUrl}/api/protected/transactions`, body, authConfig());
     
     static usersList = (body) =>
-        axios.get(`${baseUrl}/api/protected/users/list`, body, authConfig());
+        axios.post(`${baseUrl}/api/protected/users/list`, body, authConfig());
 }
 
 const authConfig = () => {

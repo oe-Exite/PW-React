@@ -1,0 +1,19 @@
+.transaction {
+    margin-left: 20px;
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+
+        &_control {
+            margin-top: 1em;
+        }
+
+        &_buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between
+        }
+    }
+}

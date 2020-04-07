@@ -1,5 +1,21 @@
 .profile {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+
+    &__header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    &__part {
+        width: 50%;
+    }
+
+    &__notransactions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
