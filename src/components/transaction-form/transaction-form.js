@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { StateContext } from '../../core/state/state-provider';
 import TextField from '@material-ui/core/TextField';
 import { ApiService } from '../../core/api-service';
 import UserService from '../../services/user-service';
@@ -8,15 +9,17 @@ import styles from './transaction-form.module.scss';
 
 export default class TransactionForm extends Component {
 
+    static contextType = StateContext;
+
     state = {
         name: '',
         amount: 1,
-        users: []
+        users: [],
+        error: null
     };
 
     updateUsers(searchStr) {
         ApiService.usersList({filter: searchStr}).then((res) => {
-            console.log('usersList', res);
             this.setState({
                 users: res.data.map((x) => x.name)
             });
@@ -24,19 +27,20 @@ export default class TransactionForm extends Component {
     }
 
     componentDidMount() {
-        console.log('componentDidMount', this.props.selectedTransaction);
-        this.setState({
-            name: this.props.selectedTransaction.username,
-            amount: this.props.selectedTransaction.amount
-        });
-    }
-
-    componentDidUpdate(prevProps) {
-        console.log('componentDidUpdate', prevProps, this.props);
-        if (prevProps.selectedTransaction.id !== this.props.selectedTransaction.id) {
+        if (this.props.selectedTransaction.id) {
             this.setState({
                 name: this.props.selectedTransaction.username,
                 amount: this.props.selectedTransaction.amount
+            });
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.selectedTransaction.id !== this.props.selectedTransaction.id) {
+            this.setState({
+                name: this.props.selectedTransaction.username,
+                amount: this.props.selectedTransaction.amount,
+                error: null
             });
         }
     }
@@ -51,14 +55,12 @@ export default class TransactionForm extends Component {
     }
     
     handleAutocompleteSelect = (event, value) => {
-        console.log('handleAutocompleteSelect', value);
         this.setState({
             name: value
         });
     }
 
     handleAutocompleteInputChange = (event, value, reason) => {
-        console.log('handleAutocompleteChange', event, value, reason);
         if (reason === 'input') {
             this.updateUsers(value);
         }
@@ -66,11 +68,19 @@ export default class TransactionForm extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        const {users, ...data} = this.state;
-        console.log('Form value', data);
-        UserService.createTransaction(data).then((res) => {
-            this.props.onTransactionClose(null);
-        });
+        if (this.state.amount > 0) {
+            const {users, ...data} = this.state;
+            const [{}, dispatch] = this.context;
+            UserService.createTransaction(data, dispatch).then((res) => {
+                this.props.onTransactionClose(null);
+                UserService.changeUserBalance(data.amount, dispatch);
+            })
+            .catch((error) => {
+                this.setState({
+                    error: error.response.data
+                });
+            });
+        }
     }
 
     handleCancel = () => {
@@ -80,7 +90,7 @@ export default class TransactionForm extends Component {
     render() {
         return (
             <div className={styles.transaction}>
-                <h1>{this.props.selectedTransaction.id ? 'Transaction ' + this.props.selectedTransaction.id : 'New Transaction'}</h1>
+                <h1>{this.props.selectedTransaction.id ? 'New Transaction based on Transaction ' + this.props.selectedTransaction.id : 'New Transaction'}</h1>
                 <form onSubmit={this.handleSubmit} className={styles.transaction__form} autoComplete="off">
                     <TextField
                         className={styles.transaction__form_control}
@@ -114,6 +124,11 @@ export default class TransactionForm extends Component {
                         </Button>
                     </div>
                 </form>
+                { this.state.error &&
+                    <div className={styles.transaction__error}>
+                        {this.state.error}
+                    </div>
+                }
             </div>
         );
     }

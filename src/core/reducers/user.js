@@ -1,7 +1,8 @@
 import { 
     SET_USER_PROFILE, 
     SET_USER_TRANSACTIONS,
-    ADD_USER_TRANSACTION
+    ADD_USER_TRANSACTION,
+    CHANGE_USER_BALANCE
 } from '../actions/user'
 
 export const userReducer = (state, action) => {
@@ -22,6 +23,13 @@ export const userReducer = (state, action) => {
             return {
                 ...state,
                 transactions: newTransactions
+            };
+        case CHANGE_USER_BALANCE:
+            const changedUser = {...state.user};
+            changedUser.balance -= action.payload;
+            return {
+                ...state,
+                user: changedUser
             };
         default:
             return state;
