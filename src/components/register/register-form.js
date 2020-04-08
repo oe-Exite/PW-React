@@ -12,7 +12,8 @@ class RegisterForm extends Component {
         username: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        error: null
     }
 
     constructor(props) {
@@ -21,14 +22,11 @@ class RegisterForm extends Component {
     }
 
     isPasswordCorrect() {
-        const input = this.passInput.current;
-        console.log(this.state.password, this.state.confirmPassword);
         const isCorrect = this.state.password === this.state.confirmPassword;
-        if (isCorrect) {
-            // input is valid -- reset the error message
-            input.setCustomValidity('');
-        } else {
-            input.setCustomValidity('Passwords don\'t match.');
+        if (!isCorrect) {
+            this.setState({
+                error: 'Passwords don\'t match.'
+            })
         }
         return isCorrect;
     }
@@ -49,13 +47,16 @@ class RegisterForm extends Component {
     }
 
     handleSubmit = (event) => {
-        console.log('Form value', this.state);
         event.preventDefault();
         if (this.isPasswordCorrect()) {
-            const {confirmPassword, ...data} = this.state;
+            const {confirmPassword, error, ...data} = this.state;
             this.context.register(data).then((res) => {
-                console.log('register component res', res);
                 this.props.history.push('/')
+            })
+            .catch((error) => {
+                this.setState({
+                    error: error.response.data
+                });
             });
         }
     }
@@ -87,6 +88,11 @@ class RegisterForm extends Component {
                         <NavLink to="/login">To Login</NavLink>
                     </div>
                 </form>
+                { this.state.error &&
+                    <div className={styles.register__error}>
+                        {this.state.error}
+                    </div>
+                }
             </div>
         );
     }

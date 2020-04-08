@@ -1,5 +1,6 @@
 .register {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100%;
@@ -19,5 +20,10 @@
         background-color: rgb(81, 164, 212);
         color: #fff;
         padding: 1em 2em;
+    }
+
+    &__error {
+        margin-top: 1em;
+        color: red;
     }
 }

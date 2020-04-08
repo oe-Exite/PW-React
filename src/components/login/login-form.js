@@ -10,7 +10,8 @@ class LoginForm extends Component {
 
     state = {
         email: '',
-        password: ''
+        password: '',
+        error: null
     }
     
     handleChange = (event) => {
@@ -23,11 +24,15 @@ class LoginForm extends Component {
     }
 
     handleSubmit = (event) => {
-        console.log('Form value', this.state);
         event.preventDefault();
-        this.context.login(this.state).then((res) => {
-            console.log('login component res', res);
+        const {error, ...data} = this.state;
+        this.context.login(data).then((res) => {
             this.props.history.push('/');
+        })
+        .catch((error) => {
+            this.setState({
+                error: error.response.data
+            });
         });
     }
 
@@ -50,6 +55,11 @@ class LoginForm extends Component {
                         <NavLink to="/register">Register</NavLink>
                     </div>
                 </form>
+                { this.state.error &&
+                    <div className={styles.login__error}>
+                        {this.state.error}
+                    </div>
+                }
             </div>
         );
     }
