@@ -21,12 +21,12 @@ class Profile extends Component {
         UserService.getUserinfo(dispatch).then((res) =>
             UserService.getUserTransactions(dispatch)
         )
+        .then(() => {
+            this.setState({isLoaded: true});
+        })
         .catch((error) =>
             this.props.history.push('/login')
         )
-        .finally(() => {
-            this.setState({isLoaded: true})
-        });
     }
 
     handleTransactionSelect = (transaction) => {

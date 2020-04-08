@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StateContext } from '../../core/state/state-provider';
 import { bearerToken } from '../../core/api-service';
-import { logout } from '../../services/auth-service';
+import AuthService from '../../services/auth-service';
 import { withRouter } from 'react-router-dom';
 import styles from './header.module.scss';
 
@@ -10,7 +10,7 @@ class Header extends Component {
 
     logoutUser = () => {
         const [{ user }, dispatch] = this.context;
-        logout(this.props.history, dispatch);
+        AuthService.logout(this.props.history, dispatch);
     }
 
     render() {
